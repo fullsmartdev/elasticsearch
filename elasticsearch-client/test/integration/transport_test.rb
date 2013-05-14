@@ -16,20 +16,20 @@ class Elasticsearch::Client::ClientIntegrationTest < Elasticsearch::IntegrationT
           f.adapter  :typhoeus
         end
 
-      client = Elasticsearch::Client::Client.new nil, transport: transport
+      client = Elasticsearch::Client::Client.new transport: transport
       client.perform_request 'GET', ''
     end
 
     should "use the Curb client" do
       require 'curb'
-      require 'elasticsearch/core/transport/http/curb'
+      require 'elasticsearch/client/transport/http/curb'
 
       transport = Elasticsearch::Client::Transport::HTTP::Curb.new \
         :hosts => [ { :host => 'localhost', :port => '9250' } ] do |curl|
           curl.verbose = true
         end
 
-      client = Elasticsearch::Client::Client.new nil, transport: transport
+      client = Elasticsearch::Client::Client.new transport: transport
       client.perform_request 'GET', ''
     end
   end
