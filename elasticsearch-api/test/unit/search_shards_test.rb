@@ -2,21 +2,21 @@ require 'test_helper'
 
 module Elasticsearch
   module Test
-    class BenchmarkTest < ::Test::Unit::TestCase
+    class SearchShardsTest < ::Test::Unit::TestCase
 
-      context "Benchmark" do
+      context "Search shards" do
         subject { FakeClient.new }
 
         should "perform correct request" do
           subject.expects(:perform_request).with do |method, url, params, body|
-            assert_equal 'PUT', method
-            assert_equal '_bench', url
+            assert_equal 'GET', method
+            assert_equal '_search_shards', url
             assert_equal Hash.new, params
-            assert_equal 'foo', body[:name]
+            assert_nil   body
             true
           end.returns(FakeResponse.new)
 
-          subject.benchmark :body => { :name => 'foo' }
+          subject.search_shards
         end
 
       end
