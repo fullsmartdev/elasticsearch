@@ -2,19 +2,7 @@ module Elasticsearch
   module API
     module Actions
 
-      # Get the number of documents for the cluster, index, type, or a query.
-      #
-      # @example Get the number of all documents in the cluster
-      #
-      #     client.count
-      #
-      # @example Get the number of documents in a specified index
-      #
-      #     client.count index: 'myindex'
-      #
-      # @example Get the number of documents matching a specific query
-      #
-      #     index: 'my_index', body: { filtered: { filter: { terms: { foo: ['bar'] } } } }
+      # Return whether documents exists for a particular query
       #
       # @option arguments [List] :index A comma-separated list of indices to restrict the results
       # @option arguments [List] :type A comma-separated list of types to restrict the results
@@ -36,15 +24,15 @@ module Elasticsearch
       #                                               analyzed (default: false)
       # @option arguments [String] :default_operator The default operator for query string query (AND or OR)
       #                                              (options: AND, OR)
-      # @option arguments [String] :df The field to use as default where no field prefix is given in the query
-      #                                string
-      # @option arguments [Boolean] :lenient Specify whether format-based query failures (such as providing text
-      #                                      to a numeric field) should be ignored
+      # @option arguments [String] :df The field to use as default where no field prefix is given
+      #                                in the query string
+      # @option arguments [Boolean] :lenient Specify whether format-based query failures
+      #                                      (such as providing text to a numeric field) should be ignored
       # @option arguments [Boolean] :lowercase_expanded_terms Specify whether query terms should be lowercased
       #
-      # @see http://elasticsearch.org/guide/reference/api/count/
+      # @see http://www.elastic.co/guide/en/elasticsearch/reference/master/search-exists.html
       #
-      def count(arguments={})
+      def search_exists(arguments={})
         valid_params = [
           :ignore_unavailable,
           :allow_no_indices,
@@ -59,10 +47,8 @@ module Elasticsearch
           :df,
           :lenient,
           :lowercase_expanded_terms ]
-
-        method = HTTP_GET
-        path   = Utils.__pathify( Utils.__listify(arguments[:index]), Utils.__listify(arguments[:type]), '_count' )
-
+        method = 'POST'
+        path   = "_search/exists"
         params = Utils.__validate_and_extract_params arguments, valid_params
         body   = arguments[:body]
 
